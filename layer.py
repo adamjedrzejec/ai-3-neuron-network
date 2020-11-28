@@ -49,16 +49,7 @@ class Linear:
 
     def backward(self, grad):
         print('linear      backward')
-        self.grad = grad
-
-        result = []
-
-        for i in range(len(self.weights)):
-            result.append(np.dot(self.weights[i], grad))
-
-        print('result', result)
-        return result
-        # return sum(grad * self.weights)
+        return list(map(lambda w: np.dot(w, grad), self.weights))
 
 
 class Activation:
@@ -107,4 +98,4 @@ class Activation:
     # done
     def backward(self, grad):
         print('activation  backward')
-        return list(map(lambda g: self.activationDerivative(self.state) * g, grad))
+        return list(map(lambda s, g: self.activationDerivative(s) * g, self.state, grad))

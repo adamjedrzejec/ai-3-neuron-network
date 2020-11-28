@@ -1,7 +1,7 @@
 import layer
 from layer import ActivationFunctionTypes as aft
 
-a = layer.Layer(2, 5, aft.HeaviSideStepFunction)
+a = layer.Layer(2, 3, aft.LogisticFunction)
 
 print(a.forward([-1, 1]))
 a.backward([1, 2])

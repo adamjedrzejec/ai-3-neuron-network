@@ -92,7 +92,7 @@ class Activation:
     def forward(self, state):
         print('activation:forward')
         self.state = state
-        return self.activationFunction(state)
+        return map(lambda s: self.activationFunction(s), state)
 
     def backward(self, grad):
         print('activation:backward')

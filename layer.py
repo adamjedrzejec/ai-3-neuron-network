@@ -16,25 +16,25 @@ class ActivationFunctionTypes(Enum):
 class Layer:
     # done
     def __init__(self, inputWidth, neuronsInLayer, activationFunction):
-        print('layer:init')
+        print('layer       init')
         self.linear = Linear(inputWidth, neuronsInLayer)
         self.activation = Activation(activationFunction)
 
     # done
     def forward(self, X):
-        print('layer:forward')
+        print('layer       forward')
         return self.activation.forward(self.linear.forward(X))
 
     # done
     def backward(self, grad):
-        print('layer:backward')
+        print('layer       backward')
         return self.linear.backward(self.activation.backward(grad))
 
 
 class Linear:
     # done
     def __init__(self, inputWidth, neuronsInLayer):
-        print('linear:init')
+        print('linear      init')
         self.X = None
         self.grad = None
 
@@ -43,21 +43,28 @@ class Linear:
 
     # done
     def forward(self, X):
-        print('linear:forward')
+        print('linear      forward')
         self.X = X
         return list(map(lambda w: np.dot(X, w), self.weights))
 
     def backward(self, grad):
-        print('linear:backward', self.X)
+        print('linear      backward')
         self.grad = grad
-        return 1
+
+        result = []
+
+        for i in range(len(self.weights)):
+            result.append(np.dot(self.weights[i], grad))
+
+        print('result', result)
+        return result
         # return sum(grad * self.weights)
 
 
 class Activation:
     # done
     def __init__(self, activationFunction):
-        print('activation:init')
+        print('activation  init')
         self.state = None
 
         if activationFunction == ActivationFunctionTypes.HeaviSideStepFunction:
@@ -93,11 +100,11 @@ class Activation:
 
     # done
     def forward(self, state):
-        print('activation:forward')
+        print('activation  forward')
         self.state = state
         return list(map(lambda s: self.activationFunction(s), state))
 
     # done
     def backward(self, grad):
-        print('activation:backward')
+        print('activation  backward')
         return list(map(lambda g: self.activationDerivative(self.state) * g, grad))

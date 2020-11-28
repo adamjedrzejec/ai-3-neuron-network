@@ -11,12 +11,19 @@ class Network:
         #   self.layers.append(layer.Layer())
 
         self.layers.append(layer.Layer(2, 3, aft.LogisticFunction))
-        self.layers.append(layer.Layer(3, 2, aft.LogisticFunction))
+        self.layers.append(layer.Layer(3, 5, aft.LogisticFunction))
+        self.layers.append(layer.Layer(5, 2, aft.LogisticFunction))
 
     def forward(self, X):
         for l in self.layers:
             X = l.forward(X)
+        return X
 
     def backward(self, grad):
         for l in self.layers[::-1]:
             grad = l.backward(grad)
+        return grad
+
+    def adjust(self):
+        for l in self.layers:
+            l.adjust(1)

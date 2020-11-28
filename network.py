@@ -19,4 +19,4 @@ class Network:
 
     def backward(self, grad):
         for l in self.layers[::-1]:
-            grad = l.forward(grad)
+            grad = l.backward(grad)

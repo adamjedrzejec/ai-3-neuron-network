@@ -1,5 +1,6 @@
 import layer
 from functionsDerivatives import ActivationFunctionTypes as aft
+import numpy as np
 
 
 class Network:
@@ -13,6 +14,13 @@ class Network:
         self.layers.append(layer.Layer(2, 3, aft.LogisticFunction))
         self.layers.append(layer.Layer(3, 5, aft.LogisticFunction))
         self.layers.append(layer.Layer(5, 2, aft.LogisticFunction))
+
+    def train(self, networkInput, predictedOutput, learningRate):
+        self.backward(np.subtract(predictedOutput, self.forward(networkInput)))
+        self.adjust(learningRate)
+
+    def evaluate(self, networkInput):
+        return self.forward(networkInput)
 
     def forward(self, X):
         for l in self.layers:

@@ -20,9 +20,9 @@ class Layer:
         print('layer       backward')
         return self.linear.backward(self.activation.backward(grad))
 
-    def adjust(self, eta):
+    def adjust(self, learningRate):
         print('layer       adjust')
-        self.linear.adjust(eta)
+        self.linear.adjust(learningRate)
 
 
 class Linear:
@@ -46,7 +46,7 @@ class Linear:
         self.grad = grad
         return np.dot(grad, self.weights)
 
-    def adjust(self, eta):
+    def adjust(self, learningRate):
         print('linear      adjust')
         self.weights = np.add(self.weights, np.dot(
             np.transpose([self.grad]), [self.X]))

@@ -1,4 +1,15 @@
 import math
+from enum import Enum
+
+
+class ActivationFunctionTypes(Enum):
+    HeaviSideStepFunction = 1
+    LogisticFunction = 2
+    Sin = 3
+    Tanh = 4
+    Sign = 5
+    ReLu = 6
+    LeakyReLu = 7
 
 
 def heaviSideStepFunction(x):

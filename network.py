@@ -1,6 +1,5 @@
 import layer
-from enum import Enum
-from layer import ActivationFunctionTypes as aft
+from functionsDerivatives import ActivationFunctionTypes as aft
 
 
 class Network:

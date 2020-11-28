@@ -1,16 +1,6 @@
 import numpy as np
 import functionsDerivatives as fd
-from enum import Enum
-
-
-class ActivationFunctionTypes(Enum):
-    HeaviSideStepFunction = 1
-    LogisticFunction = 2
-    Sin = 3
-    Tanh = 4
-    Sign = 5
-    ReLu = 6
-    LeakyReLu = 7
+from functionsDerivatives import ActivationFunctionTypes as aft
 
 
 class Layer:
@@ -58,31 +48,31 @@ class Activation:
         print('activation  init')
         self.state = None
 
-        if activationFunction == ActivationFunctionTypes.HeaviSideStepFunction:
+        if activationFunction == aft.HeaviSideStepFunction:
             self.activationFunction = fd.heaviSideStepFunction
             self.activationDerivative = fd.heaviSideStepFunctionDerivative
             self.theta = 0.01  # np.random.uniform(.05, .1)
-        elif activationFunction == ActivationFunctionTypes.LogisticFunction:
+        elif activationFunction == aft.LogisticFunction:
             self.activationFunction = fd.logisticFunction
             self.activationDerivative = fd.logisticFunctionDerivative
             self.theta = 1  # np.random.uniform(2, 4)
-        elif activationFunction == ActivationFunctionTypes.Sin:
+        elif activationFunction == aft.Sin:
             self.activationFunction = fd.sinh
             self.activationDerivative = fd.sinhDerivative
             self.theta = np.random.uniform(.005, .01)
-        elif activationFunction == ActivationFunctionTypes.Tanh:
+        elif activationFunction == aft.Tanh:
             self.activationFunction = fd.tanh
             self.activationDerivative = fd.tanhDerivative
             self.theta = np.random.uniform(.5, 1)
-        elif activationFunction == ActivationFunctionTypes.Sign:
+        elif activationFunction == aft.Sign:
             self.activationFunction = fd.sign
             self.activationDerivative = fd.signDerivative
             self.theta = np.random.uniform(.03, .06)
-        elif activationFunction == ActivationFunctionTypes.ReLu:
+        elif activationFunction == aft.ReLu:
             self.activationFunction = fd.reLu
             self.activationDerivative = fd.reLuDerivative
             self.theta = np.random.uniform(.5, 1)
-        elif activationFunction == ActivationFunctionTypes.LeakyReLu:
+        elif activationFunction == aft.LeakyReLu:
             self.activationFunction = fd.leakyReLu
             self.activationDerivative = fd.leakyReLuDerivative
             self.theta = np.random.uniform(.5, 1)

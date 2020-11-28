@@ -1,6 +1,6 @@
 import layer
 import network
-from layer import ActivationFunctionTypes as aft
+from functionsDerivatives import ActivationFunctionTypes as aft
 
 # a = layer.Layer(2, 3, aft.LogisticFunction)
 

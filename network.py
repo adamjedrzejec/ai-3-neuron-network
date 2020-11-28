@@ -24,6 +24,6 @@ class Network:
             grad = l.backward(grad)
         return grad
 
-    def adjust(self):
+    def adjust(self, eta):
         for l in self.layers:
-            l.adjust(1)
+            l.adjust(eta)

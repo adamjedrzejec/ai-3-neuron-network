@@ -36,13 +36,16 @@ class Linear:
     def __init__(self, inputWidth, neuronsInLayer):
         print('linear:init')
         self.X = None
-        self.weights = np.random.rand(neuronsInLayer, inputWidth)
         self.grad = None
 
+        # 2-D array of neuron weights
+        self.weights = np.random.rand(neuronsInLayer, inputWidth)
+
+    # done
     def forward(self, X):
         print('linear:forward')
         self.X = X
-        return np.dot([1, 2], [2, 2])
+        return list(map(lambda w: np.dot(X, w), self.weights))
 
     def backward(self, grad):
         print('linear:backward', self.X)
@@ -92,7 +95,7 @@ class Activation:
     def forward(self, state):
         print('activation:forward')
         self.state = state
-        return map(lambda s: self.activationFunction(s), state)
+        return list(map(lambda s: self.activationFunction(s), state))
 
     def backward(self, grad):
         print('activation:backward')

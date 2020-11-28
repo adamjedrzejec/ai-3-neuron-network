@@ -97,7 +97,7 @@ class Activation:
         self.state = state
         return list(map(lambda s: self.activationFunction(s), state))
 
+    # done
     def backward(self, grad):
         print('activation:backward')
-        # return sum of all grads
-        return self.activationDerivative(self.state) * grad
+        return list(map(lambda g: self.activationDerivative(self.state) * g, grad))

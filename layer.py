@@ -39,7 +39,7 @@ class Linear:
 
     def backward(self, grad):
         print('linear      backward')
-        return list(map(lambda w: np.dot(w, grad), self.weights))
+        return np.dot(grad, self.weights)
 
     def adjust(self, eta):
         self.weights = np.add(self.weights, np.dot(

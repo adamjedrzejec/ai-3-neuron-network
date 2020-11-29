@@ -31,6 +31,10 @@ class Classifier:
                 y.append(sample.y)
         return x, y
 
+    def getAllPoints(self):
+        x, y = self.getAllSamples()
+        return list(zip(x, y))
+
 
 class Mode:
     def __init__(self, meanX, meanY):

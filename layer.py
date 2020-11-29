@@ -46,31 +46,24 @@ class Activation:
         if activationFunction == aft.HeaviSideStepFunction:
             self.activationFunction = fd.heaviSideStepFunction
             self.activationDerivative = fd.heaviSideStepFunctionDerivative
-            self.theta = 0.01  # np.random.uniform(.05, .1)
         elif activationFunction == aft.LogisticFunction:
             self.activationFunction = fd.logisticFunction
             self.activationDerivative = fd.logisticFunctionDerivative
-            self.theta = 1  # np.random.uniform(2, 4)
         elif activationFunction == aft.Sin:
             self.activationFunction = fd.sinh
             self.activationDerivative = fd.sinhDerivative
-            self.theta = np.random.uniform(.005, .01)
         elif activationFunction == aft.Tanh:
             self.activationFunction = fd.tanh
             self.activationDerivative = fd.tanhDerivative
-            self.theta = np.random.uniform(.5, 1)
         elif activationFunction == aft.Sign:
             self.activationFunction = fd.sign
             self.activationDerivative = fd.signDerivative
-            self.theta = np.random.uniform(.03, .06)
         elif activationFunction == aft.ReLu:
             self.activationFunction = fd.reLu
             self.activationDerivative = fd.reLuDerivative
-            self.theta = np.random.uniform(.5, 1)
         elif activationFunction == aft.LeakyReLu:
             self.activationFunction = fd.leakyReLu
             self.activationDerivative = fd.leakyReLuDerivative
-            self.theta = np.random.uniform(.5, 1)
         else:
             raise ValueError('Activation function not yet supported')
 

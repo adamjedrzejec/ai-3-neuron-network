@@ -4,58 +4,43 @@ from functionsDerivatives import ActivationFunctionTypes as aft
 
 
 class Layer:
-    # done
     def __init__(self, inputWidth, neuronsInLayer, activationFunction):
-        print('layer       init')
         self.linear = Linear(inputWidth, neuronsInLayer)
         self.activation = Activation(activationFunction)
 
-    # done
     def forward(self, X):
-        print('layer       forward')
         return self.activation.forward(self.linear.forward(X))
 
-    # done
     def backward(self, grad):
-        print('layer       backward')
         return self.linear.backward(self.activation.backward(grad))
 
     def adjust(self, learningRate):
-        print('layer       adjust')
         self.linear.adjust(learningRate)
 
 
 class Linear:
-    # done
     def __init__(self, inputWidth, neuronsInLayer):
-        print('linear      init')
         self.X = None
         self.grad = None
 
         # 2-D array of neuron weights
         self.weights = np.random.rand(neuronsInLayer, inputWidth)
 
-    # done
     def forward(self, X):
-        print('linear      forward')
         self.X = X
         return list(map(lambda w: np.dot(X, w), self.weights))
 
     def backward(self, grad):
-        print('linear      backward')
         self.grad = grad
         return np.dot(grad, self.weights)
 
     def adjust(self, learningRate):
-        print('linear      adjust')
         self.weights = np.add(self.weights, np.dot(
             np.transpose([self.grad]), [self.X]))
 
 
 class Activation:
-    # done
     def __init__(self, activationFunction):
-        print('activation  init')
         self.state = None
 
         if activationFunction == aft.HeaviSideStepFunction:
@@ -89,13 +74,9 @@ class Activation:
         else:
             raise ValueError('Activation function not yet supported')
 
-    # done
     def forward(self, state):
-        print('activation  forward')
         self.state = state
         return list(map(lambda s: self.activationFunction(s), state))
 
-    # done
     def backward(self, grad):
-        print('activation  backward')
         return list(map(lambda s, g: self.activationDerivative(s) * g, self.state, grad))

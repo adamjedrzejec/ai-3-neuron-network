@@ -35,7 +35,7 @@ class Linear:
         return np.dot(grad, self.weights)
 
     def adjust(self, learningRate):
-        self.weights = np.add(self.weights, np.dot(
+        self.weights = np.add(self.weights, learningRate * np.dot(
             np.transpose([self.grad]), [self.X]))
 
 

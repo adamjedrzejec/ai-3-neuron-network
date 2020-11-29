@@ -4,8 +4,9 @@ from functionsDerivatives import ActivationFunctionTypes as aft
 import classifier
 import random
 
+EPOCHS = 1000
 
-MODES_PER_CLASSIFIER = 2
+MODES_PER_CLASSIFIER = 1
 SAMPLES_PER_MODE = 5
 
 c1 = classifier.Classifier(MODES_PER_CLASSIFIER, SAMPLES_PER_MODE)
@@ -19,10 +20,12 @@ inputOutput2 = list(map(lambda point: [point, [1, 0]], pointsFromC2))
 
 inputsOutputs = inputOutput1 + inputOutput2
 
-random.shuffle(inputsOutputs)
-
 
 n = network.Network([1, 3, 2])
-for i in range(100):
-    n.train([-1, 1], [0, 0], 2)
-print(n.evaluate([-1, 1]))
+for i in range(EPOCHS):
+    random.shuffle(inputsOutputs)
+    for io in inputsOutputs:
+        n.train(io[0], io[1], 1)
+
+print('expected output:', inputsOutputs[0][1])
+print('output:         ', n.evaluate(inputsOutputs[0][0]))

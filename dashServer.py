@@ -65,7 +65,8 @@ class dashServer:
                         className="mr-3",
                     ),
 
-                    dbc.Button("Train and plot!", color="primary"),
+                    dbc.Button("Train and plot!", id="btn-train-and-plot",
+                               color="primary", n_clicks=0),
                 ],
                 inline=True,
             ),
@@ -76,6 +77,16 @@ class dashServer:
 
     def __configCallbacks(self):
         print('config callbacks')
+
+        @self.app.callback(
+            [Output("output-1", "children")],
+            [Input("btn-train-and-plot", "n_clicks")],
+        )
+        def trainAndPlot(btn_clicks):
+            print('btn-train-and-plot', btn_clicks)
+            if (btn_clicks % 2 == 0):
+                return ['even']
+            return ['odd']
 
 
 dashServer()

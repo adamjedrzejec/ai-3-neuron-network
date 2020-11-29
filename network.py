@@ -4,34 +4,35 @@ import numpy as np
 
 
 class Network:
-    layers = []
+    __layers = []
 
     def __init__(self, networkModel):
         # for neuronsInLayer in networkModel:
         #   print(neuronsInLayer)
-        #   self.layers.append(layer.Layer())
+        #   self.__layers.append(layer.Layer())
 
-        self.layers.append(layer.Layer(2, 3, aft.LogisticFunction))
-        self.layers.append(layer.Layer(3, 5, aft.LogisticFunction))
-        self.layers.append(layer.Layer(5, 2, aft.LogisticFunction))
+        self.__layers.append(layer.Layer(2, 3, aft.LogisticFunction))
+        self.__layers.append(layer.Layer(3, 5, aft.LogisticFunction))
+        self.__layers.append(layer.Layer(5, 2, aft.LogisticFunction))
 
     def train(self, networkInput, predictedOutput, learningRate):
-        self.backward(np.subtract(predictedOutput, self.forward(networkInput)))
-        self.adjust(learningRate)
+        self.__backward(np.subtract(predictedOutput,
+                                    self.__forward(networkInput)))
+        self.__adjust(learningRate)
 
     def evaluate(self, networkInput):
-        return self.forward(networkInput)
+        return self.__forward(networkInput)
 
-    def forward(self, X):
-        for l in self.layers:
+    def __forward(self, X):
+        for l in self.__layers:
             X = l.forward(X)
         return X
 
-    def backward(self, grad):
-        for l in self.layers[::-1]:
+    def __backward(self, grad):
+        for l in self.__layers[::-1]:
             grad = l.backward(grad)
         return grad
 
-    def adjust(self, eta):
-        for l in self.layers:
+    def __adjust(self, eta):
+        for l in self.__layers:
             l.adjust(eta)

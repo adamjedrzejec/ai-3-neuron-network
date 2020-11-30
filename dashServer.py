@@ -153,10 +153,13 @@ class dashServer:
                 pointsFromC1 = self.classifier1.getAllPoints()
                 pointsFromC2 = self.classifier2.getAllPoints()
 
+                print('p1', pointsFromC1[0])
+                print('p2', pointsFromC2[0])
+
                 inputOutput1 = list(
-                    map(lambda point: [point, [0, 1]], pointsFromC1))
+                    map(lambda point: [point, [0]], pointsFromC1))
                 inputOutput2 = list(
-                    map(lambda point: [point, [1, 0]], pointsFromC2))
+                    map(lambda point: [point, [1]], pointsFromC2))
 
                 inputsOutputs = inputOutput1 + inputOutput2
 
@@ -165,13 +168,48 @@ class dashServer:
                 for i in range(epochs):
                     random.shuffle(inputsOutputs)
                     for io in inputsOutputs:
-                        n.train(io[0], io[1], 2)
+                        n.train(io[0], io[1], .3)
 
-                for i in range(len(inputsOutputs)):
-                    print('expected output:', inputsOutputs[i][1])
-                    print('output:         ', n.evaluate(inputsOutputs[i][0]))
+                x = np.arange(0, 1.01, .01)
+                y = x.copy()
 
-                return {}
+                z = []
+
+                for _y in y:
+                    _z = []
+                    for _x in x:
+                        _z.append(n.evaluate([_x, _y])[0])
+                    z.append(_z)
+
+                contour = go.Contour(
+                    z=z,
+                    x=x,
+                    y=y
+                )
+
+                scatter1 = go.Scatter(
+                    x=self.classifier1.getAllSamples()[0],
+                    y=self.classifier1.getAllSamples()[1],
+                    name=0,
+                    mode='markers'
+                )
+
+                scatter2 = go.Scatter(
+                    x=self.classifier2.getAllSamples()[0],
+                    y=self.classifier2.getAllSamples()[1],
+                    name=1,
+                    mode='markers'
+                )
+
+                fig = go.Figure(data=[contour, scatter1, scatter2])
+                fig.update_xaxes(range=[-.1, 1.1])
+                fig.update_yaxes(range=[-.1, 1.1])
+
+                # for i in range(len(inputsOutputs)):
+                #     print('expected output:', inputsOutputs[i][1])
+                #     print('output:         ', n.evaluate(inputsOutputs[i][0]))
+
+                return fig
             else:
                 raise Exception('Operation not detected: ' + operation)
             print(operation)

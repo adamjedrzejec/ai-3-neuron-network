@@ -28,7 +28,7 @@ class Linear:
 
     def forward(self, X):
         self.X = X
-        return list(map(lambda w: np.dot(X, w), self.weights))
+        return np.dot(X, np.transpose(self.weights))
 
     def backward(self, grad):
         self.grad = grad

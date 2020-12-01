@@ -106,6 +106,16 @@ class dashServer:
                         className='mr-3',
                     ),
 
+                    dbc.FormGroup(
+                        [
+                            dbc.Label('Learning rate',
+                                      className='mr-2'),
+                            dbc.Input(type='text', id='input-learning-rate',
+                                      placeholder='Learning rate'),
+                        ],
+                        className='mr-3',
+                    ),
+
                     dbc.Button('Train and plot!', id='btn-train-and-plot',
                                color='primary', n_clicks_timestamp=0),
                 ],
@@ -123,9 +133,10 @@ class dashServer:
              State('input-samples-per-mode', 'value'),
              State('input-network-model', 'value'),
              State('input-epochs', 'value'),
-             State('radioitems-input', 'value')]
+             State('radioitems-input', 'value'),
+             State('input-learning-rate', 'value')]
         )
-        def whichButtonWasClicked(btn_generate_timestamp, btn_training_timestamp, btn_create_network_timestamp, modesPerClassifier, samplesPerMode, networkModel, epochs, activationFunction):
+        def whichButtonWasClicked(btn_generate_timestamp, btn_training_timestamp, btn_create_network_timestamp, modesPerClassifier, samplesPerMode, networkModel, epochs, activationFunction, input_learning_rate):
             operation = ''
 
             if (btn_training_timestamp < btn_generate_timestamp and btn_create_network_timestamp < btn_generate_timestamp):
@@ -168,11 +179,9 @@ class dashServer:
                 return fig
 
             elif (operation == 'create network'):
-                print('n1', self.network)
                 networkModel = [int(s) for s in networkModel.split(',')]
                 self.network = network.Network(
                     networkModel, aft(activationFunction))
-                print('n2', self.network)
 
                 if (self.classifier1 is None or self.classifier2 is None):
                     return {}
@@ -216,10 +225,13 @@ class dashServer:
 
                 inputsOutputs = inputOutput1 + inputOutput2
 
+                print('learning rate', input_learning_rate)
+
                 for i in range(epochs):
                     random.shuffle(inputsOutputs)
                     for io in inputsOutputs:
-                        self.network.train(io[0], io[1], .3)
+                        self.network.train(
+                            io[0], io[1], float(input_learning_rate))
 
                 x = np.arange(0, 1.01, .01)
                 y = x.copy()
@@ -259,6 +271,7 @@ class dashServer:
                 # for i in range(len(inputsOutputs)):
                 #     print('expected output:', inputsOutputs[i][1])
                 #     print('output:         ', n.evaluate(inputsOutputs[i][0]))
+                print('n2', activationFunction, aft(activationFunction))
 
                 print(epochs, 'calculations are done')
 

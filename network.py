@@ -1,10 +1,9 @@
 import layer
-from functionsDerivatives import ActivationFunctionTypes as aft
 import numpy as np
 
 
 class Network:
-    def __init__(self, networkModel):
+    def __init__(self, networkModel, activationFunction):
         self.__layers = []
 
         numberOfInputs = 2
@@ -12,11 +11,11 @@ class Network:
 
         for neuronsInLayer in networkModel:
             self.__layers.append(layer.Layer(
-                numberOfInputs, neuronsInLayer, aft.Sin))
+                numberOfInputs, neuronsInLayer, activationFunction))
             numberOfInputs = neuronsInLayer
 
         self.__layers.append(layer.Layer(
-            numberOfInputs, numberOfOutputs, aft.Sin))
+            numberOfInputs, numberOfOutputs, activationFunction))
 
     def train(self, networkInput, predictedOutput, learningRate):
         self.__backward(np.subtract(predictedOutput,

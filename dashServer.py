@@ -9,6 +9,7 @@ import plotly.graph_objects as go
 import classifier
 import network
 import random
+from functionsDerivatives import ActivationFunctionTypes as aft
 
 
 class dashServer:
@@ -48,10 +49,11 @@ class dashServer:
                         className='mr-3',
                     ),
                     dbc.Button('Generate!', id='btn-generate-classifiers',
-                               color='primary', n_clicks_timestamp='0'),
+                               color='primary', n_clicks_timestamp=0),
                 ],
                 inline=True,
             ),
+
 
             dbc.Form(
                 [
@@ -67,6 +69,35 @@ class dashServer:
 
                     dbc.FormGroup(
                         [
+                            dbc.Label("Choose the activation function"),
+                            dbc.RadioItems(
+                                options=[
+                                    {"label": "HeaviSideStepFunction",
+                                        "value": 1},
+                                    {"label": "LogisticFunction",
+                                        "value": 2},
+                                    {"label": "Sin", "value": 3},
+                                    {"label": "Tanh", "value": 4},
+                                    {"label": "Sign", "value": 5},
+                                    {"label": "ReLu", "value": 6},
+                                    {"label": "LeakyReLu", "value": 7},
+                                ],
+                                value=2,
+                                id="radioitems-input",
+                            ),
+                        ]
+                    ),
+
+                    dbc.Button('Create network', id='btn-create-network',
+                               color='primary', n_clicks_timestamp=0),
+                ],
+                inline=True,
+            ),
+
+            dbc.Form(
+                [
+                    dbc.FormGroup(
+                        [
                             dbc.Label('Epochs',
                                       className='mr-2'),
                             dbc.Input(type='number', id='input-epochs',
@@ -76,36 +107,33 @@ class dashServer:
                     ),
 
                     dbc.Button('Train and plot!', id='btn-train-and-plot',
-                               color='primary', n_clicks_timestamp='0'),
+                               color='primary', n_clicks_timestamp=0),
                 ],
                 inline=True,
             ),
-
-            html.P(id='output-1'),
-            html.P(id='output-2'),
         ])
 
     def __configCallbacks(self):
         @self.app.callback(
             Output('contour-plot', 'figure'),
             [Input('btn-generate-classifiers', 'n_clicks_timestamp'),
-             Input('btn-train-and-plot', 'n_clicks_timestamp')],
+             Input('btn-train-and-plot', 'n_clicks_timestamp'),
+             Input('btn-create-network', 'n_clicks_timestamp')],
             [State('input-modes-per-classifier', 'value'),
              State('input-samples-per-mode', 'value'),
              State('input-network-model', 'value'),
-             State('input-epochs', 'value')]
+             State('input-epochs', 'value'),
+             State('radioitems-input', 'value')]
         )
-        def whichButtonWasClicked(btn_generate_timestamp, btn_training_timestamp, modesPerClassifier, samplesPerMode, networkModel, epochs):
+        def whichButtonWasClicked(btn_generate_timestamp, btn_training_timestamp, btn_create_network_timestamp, modesPerClassifier, samplesPerMode, networkModel, epochs, activationFunction):
             operation = ''
 
-            if (isinstance(btn_generate_timestamp, str) and isinstance(btn_training_timestamp, int)):
-                operation = 'training'
-            elif (isinstance(btn_training_timestamp, str) and isinstance(btn_generate_timestamp, int)):
+            if (btn_training_timestamp < btn_generate_timestamp and btn_create_network_timestamp < btn_generate_timestamp):
                 operation = 'generate'
-            elif (btn_training_timestamp < btn_generate_timestamp):
-                operation = 'generate'
-            elif (btn_generate_timestamp < btn_training_timestamp):
+            elif (btn_generate_timestamp < btn_training_timestamp and btn_create_network_timestamp < btn_training_timestamp):
                 operation = 'training'
+            elif (btn_training_timestamp < btn_create_network_timestamp and btn_generate_timestamp < btn_create_network_timestamp):
+                operation = 'create network'
 
             if (operation == ''):
                 return {}
@@ -139,6 +167,36 @@ class dashServer:
 
                 return fig
 
+            elif (operation == 'create network'):
+                print('n1', self.network)
+                networkModel = [int(s) for s in networkModel.split(',')]
+                self.network = network.Network(
+                    networkModel, aft(activationFunction))
+                print('n2', self.network)
+
+                if (self.classifier1 is None or self.classifier2 is None):
+                    return {}
+
+                scatter1 = go.Scatter(
+                    x=self.classifier1.getAllSamples()[0],
+                    y=self.classifier1.getAllSamples()[1],
+                    name=0,
+                    mode='markers'
+                )
+
+                scatter2 = go.Scatter(
+                    x=self.classifier2.getAllSamples()[0],
+                    y=self.classifier2.getAllSamples()[1],
+                    name=1,
+                    mode='markers'
+                )
+
+                fig = go.Figure(data=[scatter1, scatter2])
+                fig.update_xaxes(range=[-.1, 1.1])
+                fig.update_yaxes(range=[-.1, 1.1])
+
+                return fig
+
             elif (operation == 'training'):
                 if (self.classifier1 is None or self.classifier2 is None):
                     print('classifiers are not defined')
@@ -147,8 +205,6 @@ class dashServer:
                 if (networkModel in [None, ''] or epochs is None or epochs <= 0):
                     print('will not do the training')
                     return {}
-
-                networkModel = [int(s) for s in networkModel.split(',')]
 
                 pointsFromC1 = self.classifier1.getAllPoints()
                 pointsFromC2 = self.classifier2.getAllPoints()
@@ -160,12 +216,10 @@ class dashServer:
 
                 inputsOutputs = inputOutput1 + inputOutput2
 
-                n = network.Network(networkModel)
-
                 for i in range(epochs):
                     random.shuffle(inputsOutputs)
                     for io in inputsOutputs:
-                        n.train(io[0], io[1], .3)
+                        self.network.train(io[0], io[1], .3)
 
                 x = np.arange(0, 1.01, .01)
                 y = x.copy()
@@ -175,7 +229,7 @@ class dashServer:
                 for _y in y:
                     _z = []
                     for _x in x:
-                        _z.append(n.evaluate([_x, _y])[0])
+                        _z.append(self.network.evaluate([_x, _y])[0])
                     z.append(_z)
 
                 contour = go.Contour(

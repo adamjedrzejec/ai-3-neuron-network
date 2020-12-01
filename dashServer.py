@@ -140,8 +140,6 @@ class dashServer:
                 return fig
 
             elif (operation == 'training'):
-                print('training', networkModel, epochs)
-
                 if (self.classifier1 is None or self.classifier2 is None):
                     print('classifiers are not defined')
                     return {}
@@ -150,21 +148,20 @@ class dashServer:
                     print('will not do the training')
                     return {}
 
+                networkModel = [int(s) for s in networkModel.split(',')]
+
                 pointsFromC1 = self.classifier1.getAllPoints()
                 pointsFromC2 = self.classifier2.getAllPoints()
 
-                print('p1', pointsFromC1[0])
-                print('p2', pointsFromC2[0])
-
                 inputOutput1 = list(
-                    map(lambda point: [point, [0]], pointsFromC1))
+                    map(lambda point: [point, [0, 1]], pointsFromC1))
                 inputOutput2 = list(
-                    map(lambda point: [point, [1]], pointsFromC2))
+                    map(lambda point: [point, [1, 0]], pointsFromC2))
 
                 inputsOutputs = inputOutput1 + inputOutput2
 
-                n = network.Network([1, 3, 2])
-                print('b2', n)
+                n = network.Network(networkModel)
+
                 for i in range(epochs):
                     random.shuffle(inputsOutputs)
                     for io in inputsOutputs:
@@ -208,6 +205,8 @@ class dashServer:
                 # for i in range(len(inputsOutputs)):
                 #     print('expected output:', inputsOutputs[i][1])
                 #     print('output:         ', n.evaluate(inputsOutputs[i][0]))
+
+                print(epochs, 'calculations are done')
 
                 return fig
             else:

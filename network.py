@@ -6,11 +6,17 @@ import numpy as np
 class Network:
     def __init__(self, networkModel):
         self.__layers = []
-        self.__layers.append(layer.Layer(2, 3, aft.LogisticFunction))
-        self.__layers.append(layer.Layer(3, 5, aft.LogisticFunction))
-        self.__layers.append(layer.Layer(5, 1, aft.LogisticFunction))
 
-        print(len(self.__layers))
+        numberOfInputs = 2
+        numberOfOutputs = 2
+
+        for neuronsInLayer in networkModel:
+            self.__layers.append(layer.Layer(
+                numberOfInputs, neuronsInLayer, aft.Sin))
+            numberOfInputs = neuronsInLayer
+
+        self.__layers.append(layer.Layer(
+            numberOfInputs, numberOfOutputs, aft.Sin))
 
     def train(self, networkInput, predictedOutput, learningRate):
         self.__backward(np.subtract(predictedOutput,

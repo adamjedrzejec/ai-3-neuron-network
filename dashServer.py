@@ -280,6 +280,3 @@ class dashServer:
                 raise Exception('Operation not detected: ' + operation)
             print(operation)
             return {}
-
-
-dashServer()

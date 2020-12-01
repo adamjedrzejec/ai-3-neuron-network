@@ -32,12 +32,12 @@ def logisticFunctionDerivative(x):
     return logisticFunction(x) * (1 - logisticFunction(x))
 
 
-def sinh(x):
-    return math.sinh(x)
+def sin(x):
+    return math.sin(x)
 
 
-def sinhDerivative(x):
-    return math.cosh(x)
+def sinDerivative(x):
+    return math.cos(x)
 
 
 def tanh(x):

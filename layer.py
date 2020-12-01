@@ -50,8 +50,8 @@ class Activation:
             self.activationFunction = fd.logisticFunction
             self.activationDerivative = fd.logisticFunctionDerivative
         elif activationFunction == aft.Sin:
-            self.activationFunction = fd.sinh
-            self.activationDerivative = fd.sinhDerivative
+            self.activationFunction = fd.sin
+            self.activationDerivative = fd.sinDerivative
         elif activationFunction == aft.Tanh:
             self.activationFunction = fd.tanh
             self.activationDerivative = fd.tanhDerivative
